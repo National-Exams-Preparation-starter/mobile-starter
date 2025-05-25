@@ -46,7 +46,7 @@ const LoginForm = ({ className }: ILoginForm) => {
 
     if (isValid) {
       console.log("Form is valid:", formData);
-      router.push("/(tabs)");
+      router.push("/(tabs)/home/homeScreen");
     }
   };
 
