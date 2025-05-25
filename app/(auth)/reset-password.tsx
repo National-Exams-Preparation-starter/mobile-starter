@@ -1,0 +1,34 @@
+import ResetForm from "@/components/auth/resetForm";
+import AuthLayout from "@/components/common/AuthLayout";
+import React from "react";
+import {
+    KeyboardAvoidingView,
+    Platform,
+    Text,
+    View
+} from "react-native";
+
+const ResetPassword = () => {
+  return (
+    <AuthLayout>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        className="flex-1"
+      >
+        <View className="justify-center items-center gap-2 pt-24 pb-5">
+          <Text className="text-3xl font-bold font-senBold text-white">
+            Reset Password
+          </Text>
+          <Text className="text-base font-senRegular font-normal text-center text-white">
+            Enter the code and new Password
+          </Text>
+        </View>
+        <View className="w-full flex-1 bg-white rounded-t-3xl p-6">
+            <ResetForm/>
+        </View>
+      </KeyboardAvoidingView>
+    </AuthLayout>
+  );
+};
+
+export default ResetPassword;
