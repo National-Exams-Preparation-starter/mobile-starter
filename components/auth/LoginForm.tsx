@@ -38,16 +38,16 @@ const LoginForm = ({ className }: ILoginForm) => {
   };
 
   const handleLogin = () => {
-    const { isValid, errors } = validate(formData, validationSchema);
-    setError({
-      email: errors.email || "",
-      password: errors.password || "",
-    });
+    // const { isValid, errors } = validate(formData, validationSchema);
+    // setError({
+    //   email: errors.email || "",
+    //   password: errors.password || "",
+    // });
 
-    if (isValid) {
-      console.log("Form is valid:", formData);
-      router.push("/(tabs)/home/homeScreen");
-    }
+    // if (isValid) {
+    //   console.log("Form is valid:", formData);
+    // }
+    router.push("/(tabs)/home/homeScreen");
   };
 
   return (
