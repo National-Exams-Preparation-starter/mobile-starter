@@ -7,7 +7,7 @@ import { useRouter } from "expo-router";
 
 const index = () => {
     
-  const { height: h, width: w } = Dimensions.get("screen");
+  const { height: h } = Dimensions.get("screen");
   const router = useRouter();
 
   return (

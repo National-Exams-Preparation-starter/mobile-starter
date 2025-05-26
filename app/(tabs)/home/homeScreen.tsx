@@ -1,9 +1,7 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import AppLayout from '@/components/common/AppLayout'
-import {UserCircle2} from "lucide-react-native"
 import AppHeader from '@/components/common/AppHeader'
+import AppLayout from '@/components/common/AppLayout'
 import HomeContainer from '@/components/common/HomeContainer'
+import React from 'react'
 
 const homeScreen = () => {
   return (

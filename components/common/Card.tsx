@@ -1,8 +1,10 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { Feather } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 
 const Card = () => {
+  const router = useRouter();
   return (
     <View className="py-2 px-[10px] border border-gray-200 rounded-lg my-2">
       <View className="w-full h-[200px] rounded-lg overflow-hidden">
@@ -20,7 +22,7 @@ const Card = () => {
           </Text>
         </View>
         <TouchableOpacity
-          onPress={() => {}}
+          onPress={() => router.push(`/(tabs)/home/jhgfdhgfdfghjgfdsfgh`)}
           className="rounded-full bg-primary p-4  items-center justify-center"
         >
           <Feather name="arrow-up-right" size={24} color="#fff" />

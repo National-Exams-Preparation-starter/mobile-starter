@@ -8,17 +8,18 @@ import {
 
 type ButtonProps = {
   title: string;
+  textStyle?: string;
 } & TouchableOpacityProps;
 
 export const Button = forwardRef<View, ButtonProps>(
-  ({ title, ...touchableProps }, ref) => {
+  ({ title,textStyle, ...touchableProps }, ref) => {
     return (
       <TouchableOpacity
         ref={ref}
         {...touchableProps}
         className={`${styles.button} ${touchableProps.className}`}
       >
-        <Text className={`${styles.buttonText} font-senMedium`}>{title}</Text>
+        <Text className={`${styles.buttonText} font-senMedium ${textStyle}`}>{title}</Text>
       </TouchableOpacity>
     );
   },
