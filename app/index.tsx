@@ -4,11 +4,13 @@ import AppLayout from "@/components/common/AppLayout";
 import { Dimensions } from "react-native";
 import { Button } from "@/components/common/Button";
 import { useRouter } from "expo-router";
+import useAuth from "@/context/auth/AuthProvider";
 
 const index = () => {
     
   const { height: h } = Dimensions.get("screen");
   const router = useRouter();
+  const { user } = useAuth();
 
   return (
     <AppLayout>
@@ -25,21 +27,32 @@ const index = () => {
         </View>
       </View>
       <View className="justify-center items-center gap-4">
-        <Text className="font-senExtraBold font-extrabold text-2xl">
-          Free delivery offers
-        </Text>
+        {user ? (
+          <Text className="font-senExtraBold font-extrabold text-2xl">
+            Welcome Back {user?.email.split("@")[0]}!
+          </Text>
+        ) : (
+          <Text className="font-senExtraBold font-extrabold text-2xl">
+            Track your Expenses easily
+          </Text>
+        )}
         <Text className="font-senRegular font-normal text-base text-[#646982] text-center px-2">
-          Get all your loved foods in one once place, you just place the orer we
-          do the rest
+          Keep track of your spending with our easy-to-use expense tracker.
         </Text>
       </View>
       {/* Button container */}
       <View className="flex-1 justify-center">
-        <Button
-          className=""
-          title="Get Started"
-          onPress={() => router.push("/(auth)/signup")}
-        />
+        {user ? (
+          <Button
+            title="Go to Home"
+            onPress={() => router.push("/(tabs)/home/homeScreen")}
+          />
+        ) : (
+          <Button
+            title="Get Started"
+            onPress={() => router.push("/(auth)/signup")}
+          />
+        )}
       </View>
     </AppLayout>
   );

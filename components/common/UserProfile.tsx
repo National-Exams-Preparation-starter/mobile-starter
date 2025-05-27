@@ -9,21 +9,31 @@ import {
   View,
 } from "react-native";
 import ActionButton from "./ActionButton";
+import { useRouter } from "expo-router";
+import { useToast } from "react-native-toast-notifications";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import useAuth from "@/context/auth/AuthProvider";
 
 const UserProfile = () => {
+  const router = useRouter();
+  const toast = useToast();
+  const { setUser, user } = useAuth();
+
   const navigationButtons = [
     { title: "Edit Profile", onPress: () => {} },
     { title: "Privacy Settings", onPress: () => {} },
-    { title: "Logout", isLogout: true, onPress: () => {} },
+    {
+      title: "Logout",
+      isLogout: true,
+      onPress: () => {
+        AsyncStorage.removeItem("username");
+        setUser(null);
+        toast.show("You have been logged out.", { type: "success" });
+        // Redirect to login page
+        router.push("/login");
+      },
+    },
   ];
-
-  const handlePress = (title: string) => {
-    if (title === "Logout") {
-      Alert.alert("Logout", "You have been logged out.");
-    } else {
-      Alert.alert(title, `You tapped on "${title}".`);
-    }
-  };
 
   return (
     <View className="px-4">
@@ -34,8 +44,10 @@ const UserProfile = () => {
           }}
           className="w-24 h-24 rounded-full"
         />
-        <Text className="text-xl font-semibold mt-4">Jane Doe</Text>
-        <Text className="text-gray-500">jane.doe@example.com</Text>
+        <Text className="text-xl font-semibold mt-4">
+          {user?.firstname || user?.lastname ? (user?.firstname + " " + user?.lastname) : user?.email.split("@")[0]}
+        </Text>
+        <Text className="text-gray-500">{user?.email}</Text>
       </View>
 
       <FlatList

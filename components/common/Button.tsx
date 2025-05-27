@@ -1,3 +1,4 @@
+import { Loader2 } from "lucide-react-native";
 import { forwardRef } from "react";
 import {
   Text,
@@ -9,20 +10,24 @@ import {
 type ButtonProps = {
   title: string;
   textStyle?: string;
+  isLoading?:boolean;
 } & TouchableOpacityProps;
 
 export const Button = forwardRef<View, ButtonProps>(
-  ({ title,textStyle, ...touchableProps }, ref) => {
+  ({ title, textStyle,isLoading, ...touchableProps }, ref) => {
     return (
       <TouchableOpacity
         ref={ref}
         {...touchableProps}
-        className={`${styles.button} ${touchableProps.className}`}
+        className={`${styles.button} ${touchableProps.className} flex-row justify-center items-center`}
       >
-        <Text className={`${styles.buttonText} font-senMedium ${textStyle}`}>{title}</Text>
+        {isLoading && <Loader2 className="animate-spin mr-2" color={"#FFF"} />}
+        <Text className={`${styles.buttonText} font-senMedium ${textStyle}`}>
+          {title}
+        </Text>
       </TouchableOpacity>
     );
-  },
+  }
 );
 
 const styles = {

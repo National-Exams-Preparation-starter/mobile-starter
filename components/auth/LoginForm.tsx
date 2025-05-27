@@ -5,6 +5,10 @@ import { Switch, Text, TouchableOpacity, View } from "react-native";
 import useValidate, { ValidationRules } from "@/hooks/useValidate";
 import { Button } from "../common/Button";
 import FormInput from "../common/Input";
+import { useLogin } from "@/hooks/useAuth";
+import { useToast } from "react-native-toast-notifications";
+import useAuth from "@/context/auth/AuthProvider";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface ILoginForm {
   className?: string;
@@ -13,6 +17,9 @@ interface ILoginForm {
 const LoginForm = ({ className }: ILoginForm) => {
   const [rememberMe, setRememberMe] = useState(false);
   const router = useRouter();
+  const toast = useToast();
+  const { setUser } = useAuth();
+  const loginMutation = useLogin();
   const { validate } = useValidate();
   const [formData, setFormData] = useState({
     email: "",
@@ -38,16 +45,35 @@ const LoginForm = ({ className }: ILoginForm) => {
   };
 
   const handleLogin = () => {
-    // const { isValid, errors } = validate(formData, validationSchema);
-    // setError({
-    //   email: errors.email || "",
-    //   password: errors.password || "",
-    // });
+    const { isValid, errors } = validate(formData, validationSchema);
+    setError({
+      email: errors.email || "",
+      password: errors.password || "",
+    });
 
-    // if (isValid) {
-    //   console.log("Form is valid:", formData);
-    // }
-    router.push("/(tabs)/home/homeScreen");
+    if (isValid) {
+      loginMutation.mutate(
+        { email: formData.email, password: formData.password },
+        {
+          onSuccess: (response) => {
+            if (response.success) {
+              toast.show(response.message, { type: "success" });
+              setUser(response.user);
+              AsyncStorage.setItem("username", response.user?.email);
+              router.push("/(tabs)/home/homeScreen");
+            } else {
+              toast.show(response.message, { type: "danger" });
+            }
+          },
+          onError: (error) => {
+            toast.show(error.message || "Something went wrong", {
+              type: "danger",
+            });
+          },
+        }
+      );
+    }
+
   };
 
   return (
@@ -84,22 +110,26 @@ const LoginForm = ({ className }: ILoginForm) => {
             <Text className="text-[#7E8A97] font-senRegular">Remember Me</Text>
           </TouchableOpacity>
         </Text>
-        <TouchableOpacity onPress={()=>router.push("/(auth)/forgot-password")}>
-          <Text className="font-normal font-senRegular text-primary">Forgot Password?</Text>
+        <TouchableOpacity
+          onPress={() => router.push("/(auth)/forgot-password")}
+        >
+          <Text className="font-normal font-senRegular text-primary">
+            Forgot Password?
+          </Text>
         </TouchableOpacity>
       </View>
       <View className="py-3">
-        <Button title="Login" onPress={handleLogin} />
+        <Button title="Login" onPress={handleLogin} isLoading={loginMutation.isPending} />
       </View>
       <View className="flex-row justify-center items-center">
         <Text className="text-base text-center font-senRegular">
           Don't have an account?{"  "}
         </Text>
         <TouchableOpacity onPress={() => router.push("/(auth)/signup")}>
-        <Text className="text-base text-center font-senRegular uppercase text-primary">
+          <Text className="text-base text-center font-senRegular uppercase text-primary">
             Sign up
-        </Text>
-      </TouchableOpacity>
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

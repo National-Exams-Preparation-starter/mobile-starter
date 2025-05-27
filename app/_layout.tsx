@@ -9,12 +9,14 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
-import "./globals.css"
+import "./globals.css";
 
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ToastProvider } from "react-native-toast-notifications";
 
 import { useColorScheme } from "@/components/useColorScheme";
+import { Query, QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { AuthProvider } from "@/context/auth/AuthProvider";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -53,17 +55,21 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
-
+  const client = new QueryClient();
   return (
-    <ToastProvider>
-        <GestureHandlerRootView>
-          <Stack> 
-            <Stack.Screen name="index" options={{ headerShown: false }} />
-            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="+not-found" />
-          </Stack>
-        </GestureHandlerRootView>
-    </ToastProvider>
+    <QueryClientProvider client={client}>
+      <ToastProvider>
+        <AuthProvider>
+          <GestureHandlerRootView>
+            <Stack>
+              <Stack.Screen name="index" options={{ headerShown: false }} />
+              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="+not-found" />
+            </Stack>
+          </GestureHandlerRootView>
+        </AuthProvider>
+      </ToastProvider>
+    </QueryClientProvider>
   );
 }

@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios, { type AxiosInstance } from "axios";
 
-const API_URL = process.env.API_URL
+const API_URL = "https://67ac71475853dfff53dab929.mockapi.io/api/v1"
 
 const commonHeaders = {
     'Content-Type': 'application/json',
@@ -9,7 +9,7 @@ const commonHeaders = {
 
 
 
-const unauthorizedAxiosInstance: AxiosInstance = axios.create({
+export const apiClient: AxiosInstance = axios.create({
     baseURL: API_URL,
     headers: commonHeaders,
 });
@@ -35,5 +35,4 @@ authorizedAxiosInstance.interceptors.request.use(
     }
 );
 
-export const unauthorizedAPI = unauthorizedAxiosInstance;
 export const authorizedAPI = authorizedAxiosInstance;

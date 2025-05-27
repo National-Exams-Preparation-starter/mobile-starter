@@ -1,10 +1,13 @@
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { useQuery } from "@tanstack/react-query";
-import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
-import SingleItemContainer from "@/components/common/SingleItemContainer";
+import ExpenseForm from "@/components/common/AddUpdateContainer";
+import AppLayout from "@/components/common/AppLayout";
 import { getExpenseById } from "@/services/expense.service";
+import { useQuery } from "@tanstack/react-query";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { ChevronLeft } from "lucide-react-native";
+import React from "react";
+import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 
-const SingleExpensePage = () => {
+const updateScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
 
@@ -45,9 +48,26 @@ const SingleExpensePage = () => {
       </View>
     );
   }
+  return (
+    <AppLayout>
+      <View className="flex-row items-center justify-between relative">
+        <TouchableOpacity
+          onPress={() => router.back()}
+          className="p-2 rounded-full bg-primary"
+        >
+          <ChevronLeft size={22} color={"#fff"} />
+        </TouchableOpacity>
 
-  // 3. Render the expense
-  return <SingleItemContainer expense={expense} />;
+        <Text className="text-lg font-senSemiBold font-semibold text-primary -ml-5">
+          Update your Expense
+        </Text>
+        <View />
+      </View>
+      <View style={{ flex: 1 }}>
+        <ExpenseForm initialData={expense} />
+      </View>
+    </AppLayout>
+  );
 };
 
-export default SingleExpensePage;
+export default updateScreen;

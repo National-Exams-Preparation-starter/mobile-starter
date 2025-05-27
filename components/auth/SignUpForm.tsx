@@ -4,6 +4,8 @@ import { Text, TouchableOpacity, View } from "react-native";
 import FormInput from "../common/Input";
 import useValidate, { ValidationRules } from "@/hooks/useValidate";
 import { Button } from "../common/Button";
+import { useRegister } from "@/hooks/useAuth";
+import { useToast } from "react-native-toast-notifications";
 
 interface IRegisterForm {
   className?: string;
@@ -12,23 +14,34 @@ interface IRegisterForm {
 const RegisterForm = ({ className }: IRegisterForm) => {
   const navigate = useRouter();
   const { validate } = useValidate();
+  const registerMutation = useRegister();
+  const toast = useToast();
+
   const [error, setError] = useState({
-    username: "",
+    firstname: "",
+    lastname: "",
     email: "",
     password: "",
   });
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    username: "",
+    firstname: "",
+    lastname: "",
   });
 
   const validationSchema: ValidationRules = {
-    username: {
+    firstname: {
       type: "string" as const,
       required: true,
       minLength: 3,
-      message: "Username must be at least 3 characters",
+      message: "Firstname must be at least 3 characters",
+    },
+    lastname: {
+      type: "string" as const,
+      required: true,
+      minLength: 3,
+      message: "Lastname must be at least 3 characters",
     },
     email: {
       type: "email" as const,
@@ -64,25 +77,54 @@ const RegisterForm = ({ className }: IRegisterForm) => {
   const handleRegister = () => {
     const { isValid, errors } = validate(formData, validationSchema);
     setError({
-      username: errors.username || "",
+      firstname: errors.firstname || "",
+      lastname: errors.lastname || "",
       email: errors.email || "",
       password: errors.password || "",
     });
 
     if (isValid) {
-      console.log("Form is valid:", formData);
-      // Proceed with registration
+      registerMutation.mutate(
+        {
+          firstName: formData.firstname,
+          lastName: formData.lastname,
+          email: formData.email,
+          password: formData.password,
+        },
+        {
+          onSuccess: (response) => {
+            if (response?.success) {
+              toast.show(response.message, { type: "success" });
+              navigate.push("/(auth)/login");
+            } else {
+              toast.show(response?.message, { type: "danger" });
+            }
+          },
+          onError: (error) => {
+            toast.show(error.message || "Something went wrong", {
+              type: "danger",
+            });
+          },
+        }
+      );
     }
   };
 
   return (
     <View className={`${className} flex flex-col gap-4`}>
       <FormInput
-        label="Username"
-        placeholder="Username"
-        value={formData.username}
-        onChangeText={(text) => handleInputChange("username", text)}
-        errorMessage={error.username}
+        label="Firstname"
+        placeholder="Firstname"
+        value={formData.firstname}
+        onChangeText={(text) => handleInputChange("firstname", text)}
+        errorMessage={error.firstname}
+      />
+      <FormInput
+        label="Lastname"
+        placeholder="Lastname"
+        value={formData.lastname}
+        onChangeText={(text) => handleInputChange("lastname", text)}
+        errorMessage={error.lastname}
       />
       <FormInput
         label="Email"
@@ -101,7 +143,11 @@ const RegisterForm = ({ className }: IRegisterForm) => {
         errorMessage={error.password}
       />
       <View className="py-3">
-        <Button title="Register" onPress={handleRegister} />
+        <Button
+          title="Register"
+          onPress={handleRegister}
+          isLoading={registerMutation.isPending}
+        />
       </View>
       <View className="flex-row justify-center items-center">
         <Text className="text-base text-center font-senRegular">

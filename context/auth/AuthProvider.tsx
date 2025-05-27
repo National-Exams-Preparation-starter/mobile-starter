@@ -1,18 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { authorizedAPI } from "@/config/axios.config";
+import { getUserInfo } from "@/services/auth.service";
 import { User } from "@/types/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { usePathname, useRouter } from "expo-router";
 import { useContext, useEffect, useState } from "react";
-import { useToast } from "react-native-toast-notifications";
 import { AuthContext } from "./AuthContext";
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const router = useRouter();
-  const toast = useToast();
-  const [loggingIn, setLoggingIn] = useState(false);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
 
@@ -25,10 +22,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
     const fetchUser = async () => {
       try {
-        const token = await AsyncStorage.getItem("accessToken");
-        if (!token) return;
-        const { data } = await authorizedAPI.get("/users/me");
-        setUser(data.user);
+        const username = await AsyncStorage.getItem("username");
+        if (!username) return;
+        const response = await getUserInfo();
+        setUser(response);
+
       } catch (error) {
         setUser(null);
         if (!["/", "/login", "/signup"].includes(pathname)) {

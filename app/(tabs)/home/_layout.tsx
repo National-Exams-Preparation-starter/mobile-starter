@@ -10,6 +10,7 @@ const HomeLayout = () => {
         initialRouteName="homeScreen"
       >
         <Stack.Screen name="homeScreen" />
+        <Stack.Screen name="updateScreen" />
       </Stack>
     </>
   );
