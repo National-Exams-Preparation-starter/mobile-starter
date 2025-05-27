@@ -40,12 +40,16 @@ const UserProfile = () => {
       <View className="items-center mt-4 mb-6">
         <Image
           source={{
-            uri: "https://i.pravatar.cc/150?img=2",
+            uri: `https://eu.ui-avatars.com/api/?firstname=${
+              user?.firstname
+            }&lastname=${user?.lastname}&size=${250}`,
           }}
           className="w-24 h-24 rounded-full"
         />
         <Text className="text-xl font-semibold mt-4">
-          {user?.firstname || user?.lastname ? (user?.firstname + " " + user?.lastname) : user?.email.split("@")[0]}
+          {user?.firstname || user?.lastname
+            ? user?.firstname + " " + user?.lastname
+            : user?.email.split("@")[0]}
         </Text>
         <Text className="text-gray-500">{user?.email}</Text>
       </View>

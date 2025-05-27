@@ -1,7 +1,8 @@
 // components/ExpenseCard.tsx
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import { Trash2 } from "lucide-react-native";
 import { useRouter } from "expo-router";
+import { useDeleteExpense } from "@/hooks/useExpenses";
 
 type ExpenseCardProps = {
   id: string;
@@ -19,13 +20,18 @@ const ExpenseCard = ({
   amount,
   description,
   date,
-  onDelete,
 }: ExpenseCardProps) => {
   const router = useRouter();
+
+  const deleteMutation = useDeleteExpense();
+  const handleDelete = () => {
+    deleteMutation.mutate(id);
+  };
+
   return (
     <TouchableOpacity
       onPress={() => router.push(`/(tabs)/home/${id}`)}
-      className="bg-white rounded-2xl px-4 py-3 mx-4 mb-4 shadow shadow-black/5 border border-gray-200"
+      className="bg-white rounded-2xl px-4 py-3 mb-4 shadow shadow-black/5 border border-gray-200"
     >
       {/* Header row */}
       <View className="flex-row justify-between items-center mb-1">
@@ -44,8 +50,12 @@ const ExpenseCard = ({
         <Text className="text-xs text-gray-400">
           {new Date(date).toLocaleDateString()}
         </Text>
-        <TouchableOpacity onPress={onDelete}>
-          <Trash2 size={16} color="#EF4444" />
+        <TouchableOpacity onPress={handleDelete}>
+          {deleteMutation.isPending ? (
+            <ActivityIndicator size={16} color="#FF7622" />
+          ) : (
+            <Trash2 size={16} color="#EF4444" />
+          )}
         </TouchableOpacity>
       </View>
     </TouchableOpacity>

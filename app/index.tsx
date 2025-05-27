@@ -5,12 +5,29 @@ import { Dimensions } from "react-native";
 import { Button } from "@/components/common/Button";
 import { useRouter } from "expo-router";
 import useAuth from "@/context/auth/AuthProvider";
+import LottieView from "lottie-react-native";
 
 const index = () => {
     
   const { height: h } = Dimensions.get("screen");
   const router = useRouter();
-  const { user } = useAuth();
+  const { user,loading } = useAuth();
+
+  if (loading) {
+    return (
+      <View className="flex-1 justify-center items-center bg-white">
+        <LottieView
+          source={require("@/assets/animations/lottie-animation.json")} // 👈 Add your own .json Lottie file here
+          autoPlay
+          loop
+          style={{ width: 250, height: 250 }}
+        />
+        <Text className="text-base text-gray-500 mt-4">
+          Preparing your experience...
+        </Text>
+      </View>
+    );
+  }
 
   return (
     <AppLayout>

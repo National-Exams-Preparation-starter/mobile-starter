@@ -40,6 +40,7 @@ const LoginForm = ({ className }: ILoginForm) => {
       type: "string",
       required: true,
       minLength: 6,
+      maxLength: 15,
       message: "Password is required",
     },
   };
