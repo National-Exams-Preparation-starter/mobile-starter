@@ -8,6 +8,7 @@ const commonHeaders = {
 };
 
 
+
 const unauthorizedAxiosInstance: AxiosInstance = axios.create({
     baseURL: API_URL,
     headers: commonHeaders,
