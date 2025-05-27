@@ -1,5 +1,5 @@
 interface ValidationSchema {
-  type: "string" | "email";
+  type: "string" | "email" | "number" | "date";
   required?: boolean;
   minLength?: number;
   maxLength?: number;
@@ -29,6 +29,35 @@ const useValidate = () => {
 
     if (rules.type === "email" && !EMAIL_REGEX.test(value)) {
       return "Invalid email address";
+    }
+
+    // Number validation
+    if (rules.type === "number") {
+      if (isNaN(Number(value))) {
+        return rules.message || "Only numeric values are allowed";
+      }
+    }
+
+    // Date validation (only allow today or past dates)
+    if (rules.type === "date") {
+      const inputDate = new Date(value);
+      const now = new Date();
+
+      // Strip time from both to compare date-only
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const selected = new Date(
+        inputDate.getFullYear(),
+        inputDate.getMonth(),
+        inputDate.getDate()
+      );
+
+      if (selected > today) {
+        return rules.message || "Future dates are not allowed";
+      }
+
+      if (isNaN(inputDate.getTime())) {
+        return rules.message || "Invalid date format";
+      }
     }
 
     if (rules.pattern && !rules.pattern.test(value)) {

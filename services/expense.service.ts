@@ -10,6 +10,10 @@ export const fetchExpensesByUserId = async (userId?: string) => {
     );
     return response.data;
   } catch (error: any) {
+    if (error.response && error.response.status === 404) {
+      return [];
+    }
+
     console.error("Error fetching expenses:", error);
     throw new Error("Failed to load expenses. Please try again later.");
   }

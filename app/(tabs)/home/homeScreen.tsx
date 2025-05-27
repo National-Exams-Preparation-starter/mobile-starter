@@ -7,7 +7,7 @@ const homeScreen = () => {
   return (
     <AppLayout>
         <AppHeader/>
-        <HomeContainer/>
+        <HomeContainer limit={10}/>
     </AppLayout>
   )
 }

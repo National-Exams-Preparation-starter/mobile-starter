@@ -52,6 +52,9 @@ const RegisterForm = ({ className }: IRegisterForm) => {
       type: "string" as const,
       required: true,
       minLength: 6,
+      maxLength: 15,
+      //strong password pattern
+      pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/,
       message: "Password must be at least 6 characters",
     },
   };
